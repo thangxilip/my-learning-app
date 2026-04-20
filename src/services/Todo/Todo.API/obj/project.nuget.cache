@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "g3a/ZjGtC1o=",
+  "success": true,
+  "projectFilePath": "/Users/ThangVo/Documents/ThangVD/projects/my-learning-app/src/services/Todo/Todo.API/Todo.API.csproj",
+  "expectedPackageFiles": [
+    "/Users/ThangVo/.nuget/packages/microsoft.aspnetcore.openapi/10.0.5/microsoft.aspnetcore.openapi.10.0.5.nupkg.sha512",
+    "/Users/ThangVo/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
