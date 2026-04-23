@@ -83,25 +83,26 @@
     ]
   },
   "packageFolders": {
-    "/Users/ThangVo/.nuget/packages/": {}
+    "/Users/thangvomac/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/ThangVo/Documents/ThangVD/projects/my-learning-app/src/services/Flashcard/Flashcard.API/Flashcard.API.csproj",
+      "projectUniqueName": "/Users/thangvomac/Documents/thangvd/projects/my-learning-app/src/services/Flashcard/Flashcard.API/Flashcard.API.csproj",
       "projectName": "Flashcard.API",
-      "projectPath": "/Users/ThangVo/Documents/ThangVD/projects/my-learning-app/src/services/Flashcard/Flashcard.API/Flashcard.API.csproj",
-      "packagesPath": "/Users/ThangVo/.nuget/packages/",
-      "outputPath": "/Users/ThangVo/Documents/ThangVD/projects/my-learning-app/src/services/Flashcard/Flashcard.API/obj/",
+      "projectPath": "/Users/thangvomac/Documents/thangvd/projects/my-learning-app/src/services/Flashcard/Flashcard.API/Flashcard.API.csproj",
+      "packagesPath": "/Users/thangvomac/.nuget/packages/",
+      "outputPath": "/Users/thangvomac/Documents/thangvd/projects/my-learning-app/src/services/Flashcard/Flashcard.API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/ThangVo/.nuget/NuGet/NuGet.Config"
+        "/Users/thangvomac/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://nuget.pkg.github.com/ardextech/index.json": {}
       },
       "frameworks": {
         "net10.0": {
@@ -149,7 +150,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/Users/ThangVo/.dotnet/sdk/10.0.201/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/Users/thangvomac/.dotnet/sdk/10.0.201/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

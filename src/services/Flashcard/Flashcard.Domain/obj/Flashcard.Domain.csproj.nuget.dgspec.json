@@ -1,26 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "/Users/ThangVo/Documents/ThangVD/projects/my-learning-app/src/services/Flashcard/Flashcard.Domain/Flashcard.Domain.csproj": {}
+    "/Users/thangvomac/Documents/thangvd/projects/my-learning-app/src/services/Flashcard/Flashcard.Domain/Flashcard.Domain.csproj": {}
   },
   "projects": {
-    "/Users/ThangVo/Documents/ThangVD/projects/my-learning-app/src/services/Flashcard/Flashcard.Domain/Flashcard.Domain.csproj": {
+    "/Users/thangvomac/Documents/thangvd/projects/my-learning-app/src/services/Flashcard/Flashcard.Domain/Flashcard.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/ThangVo/Documents/ThangVD/projects/my-learning-app/src/services/Flashcard/Flashcard.Domain/Flashcard.Domain.csproj",
+        "projectUniqueName": "/Users/thangvomac/Documents/thangvd/projects/my-learning-app/src/services/Flashcard/Flashcard.Domain/Flashcard.Domain.csproj",
         "projectName": "Flashcard.Domain",
-        "projectPath": "/Users/ThangVo/Documents/ThangVD/projects/my-learning-app/src/services/Flashcard/Flashcard.Domain/Flashcard.Domain.csproj",
-        "packagesPath": "/Users/ThangVo/.nuget/packages/",
-        "outputPath": "/Users/ThangVo/Documents/ThangVD/projects/my-learning-app/src/services/Flashcard/Flashcard.Domain/obj/",
+        "projectPath": "/Users/thangvomac/Documents/thangvd/projects/my-learning-app/src/services/Flashcard/Flashcard.Domain/Flashcard.Domain.csproj",
+        "packagesPath": "/Users/thangvomac/.nuget/packages/",
+        "outputPath": "/Users/thangvomac/Documents/thangvd/projects/my-learning-app/src/services/Flashcard/Flashcard.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/ThangVo/.nuget/NuGet/NuGet.Config"
+          "/Users/thangvomac/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.pkg.github.com/ardextech/index.json": {}
         },
         "frameworks": {
           "net10.0": {
@@ -59,7 +60,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/Users/ThangVo/.dotnet/sdk/10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/Users/thangvomac/.dotnet/sdk/10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
