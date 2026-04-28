@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{3BA7BF7C-C85F-42AF-B9F2-BD64F3F6AF52}"
+	ProjectSection(SolutionItems) = preProject
+		src\services\.gitignore = src\services\.gitignore
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{9DD52051-E496-404A-8400-7DF56F3360C1}"
 EndProject
