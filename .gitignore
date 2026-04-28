@@ -1,0 +1,36 @@
+# Build outputs
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio / MSBuild
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.sln.docstates
+*.rsuser
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# JetBrains Rider / ReSharper
+*.sln.DotSettings.user
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# NuGet (local packages folder if used at repo root)
+**/packages/*
+!**/packages/build/
+
+# Benchmark / test results
+TestResults/
+[Bb]enchmark[Dd]ot[Nn]et.Artifacts/
+
+# Others
+*.pidb
+*.svclog
+*.cachefile

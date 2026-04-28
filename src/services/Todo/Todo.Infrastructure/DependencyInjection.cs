@@ -15,11 +15,14 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? "Data Source=todo.db";
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new NullReferenceException("Invalid connection string");
+        }
 
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlite(connectionString));
+            options.UseNpgsql(connectionString));
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ITodoListRepository, TodoListRepository>();

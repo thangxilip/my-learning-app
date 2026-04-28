@@ -18,5 +18,18 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+        modelBuilder.Entity<TodoItemTag>(builder =>
+        {
+            builder.HasKey(x => new { x.TodoItemId, x.TagId });
+
+            builder.HasOne(x => x.TodoItem)
+                .WithMany(x => x.ItemTags)
+                .HasForeignKey(x => x.TodoItemId);
+
+            builder.HasOne(x => x.Tag)
+                .WithMany(x => x.ItemLinks)
+                .HasForeignKey(x => x.TagId);
+        });
     }
 }
