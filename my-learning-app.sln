@@ -1,5 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{3BA7BF7C-C85F-42AF-B9F2-BD64F3F6AF52}"
 	ProjectSection(SolutionItems) = preProject
 		src\services\.gitignore = src\services\.gitignore
@@ -39,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks", "src\Share
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "src\Shared\Contracts\Contracts.csproj", "{B5ABCA7B-851F-4D4F-ABDB-4B0E4BA2F3D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flashcard.API.Tests", "src\services\Flashcard\Flashcard.API.Tests\Flashcard.API.Tests.csproj", "{ECDC53AF-E7FD-49FF-A827-9FDF18CFB8B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +65,7 @@ Global
 		{9C579445-04E8-4300-81FD-B9E8B0D0A1D4} = {8A79B69C-744B-4D22-A267-79162266A3FE}
 		{FB188583-93D0-405B-B2B4-CAC8812C40AC} = {9DD52051-E496-404A-8400-7DF56F3360C1}
 		{B5ABCA7B-851F-4D4F-ABDB-4B0E4BA2F3D2} = {9DD52051-E496-404A-8400-7DF56F3360C1}
+		{ECDC53AF-E7FD-49FF-A827-9FDF18CFB8B8} = {F72C3F27-4102-4E83-863B-9796C733F630}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7B593FA8-2B40-4402-84D7-EA7C491A83D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -104,5 +108,9 @@ Global
 		{B5ABCA7B-851F-4D4F-ABDB-4B0E4BA2F3D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5ABCA7B-851F-4D4F-ABDB-4B0E4BA2F3D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5ABCA7B-851F-4D4F-ABDB-4B0E4BA2F3D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECDC53AF-E7FD-49FF-A827-9FDF18CFB8B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECDC53AF-E7FD-49FF-A827-9FDF18CFB8B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECDC53AF-E7FD-49FF-A827-9FDF18CFB8B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECDC53AF-E7FD-49FF-A827-9FDF18CFB8B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
