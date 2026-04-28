@@ -12,8 +12,7 @@ public class DeckRepository(FlashcardDbContext context) : Repository<Deck>(conte
     {
         return await DbSet.AsNoTracking()
             .Where(x => x.UserId == userId)
-            .OrderBy(x => x.SortOrder)
-            .ThenBy(x => x.Name)
+            .OrderBy(x => x.Name)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
     }

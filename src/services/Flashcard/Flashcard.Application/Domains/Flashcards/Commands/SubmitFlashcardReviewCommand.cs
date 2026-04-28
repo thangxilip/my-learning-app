@@ -1,6 +1,7 @@
 using Flashcard.Application.Common.Exceptions;
-using Flashcard.Application.Common.Mappings;
 using Flashcard.Application.Contracts;
+using Flashcard.Domain.Entities;
+using Flashcard.Domain.Enums;
 using Flashcard.Domain.Repositories;
 using MediatR;
 
@@ -40,29 +41,35 @@ public class SubmitFlashcardReviewCommandHandler(IUnitOfWork unitOfWork)
             }
         }
 
-        flashcard.UpdateSchedule(
-            request.Card.Due,
-            request.Card.Stability,
-            request.Card.Difficulty,
-            request.Card.ElapsedDays,
-            request.Card.ScheduledDays,
-            request.Card.Reps,
-            request.Card.Lapses,
-            request.Card.State.ToFsrsState(),
-            request.Card.LastReview);
+        var card = request.Card;
+        flashcard.Due = card.Due;
+        flashcard.Stability = card.Stability;
+        flashcard.Difficulty = card.Difficulty;
+        flashcard.ElapsedDays = card.ElapsedDays;
+        flashcard.ScheduledDays = card.ScheduledDays;
+        flashcard.Reps = card.Reps;
+        flashcard.Lapses = card.Lapses;
+        flashcard.State = ToFsrsState(card.State);
+        flashcard.LastReview = card.LastReview;
+        flashcard.RowVersion = Guid.NewGuid().ToByteArray();
+        flashcard.Touch();
 
-        var reviewLog = Domain.Entities.CardReviewLog.Create(
-            request.FlashcardId,
-            request.Log.ReviewAt,
-            request.Log.Rating.ToFsrsRating(),
-            request.Log.State.ToFsrsState(),
-            request.Log.ScheduledDays,
-            request.ClientMutationId);
+        var reviewLog = new CardReviewLog
+        {
+            FlashcardId = request.FlashcardId,
+            ReviewAt = request.Log.ReviewAt,
+            Rating = ToFsrsRating(request.Log.Rating),
+            State = ToFsrsState(request.Log.State),
+            ScheduledDays = request.Log.ScheduledDays,
+            ClientMutationId = string.IsNullOrWhiteSpace(request.ClientMutationId)
+                ? null
+                : request.ClientMutationId.Trim()
+        };
 
         await unitOfWork.ReviewLogs.AddAsync(reviewLog, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new ReviewSyncResultDto(flashcard.ToDto(), reviewLog.ToDto());
+        return new ReviewSyncResultDto(ToFlashcardDto(flashcard), ToReviewLogDto(reviewLog));
     }
 
     private static void ValidateRowVersion(string? expectedRowVersion, byte[] actualRowVersion)
@@ -87,4 +94,51 @@ public class SubmitFlashcardReviewCommandHandler(IUnitOfWork unitOfWork)
             throw new ConflictException("Flashcard was changed by another operation.");
         }
     }
+
+    private static FsrsState ToFsrsState(byte value)
+    {
+        if (!Enum.IsDefined(typeof(FsrsState), value))
+        {
+            throw new ArgumentOutOfRangeException(nameof(value), "State value is invalid.");
+        }
+
+        return (FsrsState)value;
+    }
+
+    private static FsrsRating ToFsrsRating(byte value)
+    {
+        if (!Enum.IsDefined(typeof(FsrsRating), value))
+        {
+            throw new ArgumentOutOfRangeException(nameof(value), "Rating value is invalid.");
+        }
+
+        return (FsrsRating)value;
+    }
+
+    private static FlashcardDto ToFlashcardDto(Domain.Entities.Flashcard f)
+    {
+        var card = new FsrsCardDto(
+            f.Due,
+            f.Stability,
+            f.Difficulty,
+            f.ElapsedDays,
+            f.ScheduledDays,
+            f.Reps,
+            f.Lapses,
+            (byte)f.State,
+            f.LastReview);
+
+        return new FlashcardDto(
+            f.Id,
+            f.DeckId,
+            f.Front,
+            f.Back,
+            card,
+            Convert.ToBase64String(f.RowVersion),
+            f.CreatedAt,
+            f.UpdatedAt);
+    }
+
+    private static ReviewLogDto ToReviewLogDto(CardReviewLog log) =>
+        new((byte)log.Rating, (byte)log.State, log.ScheduledDays, log.ReviewAt);
 }

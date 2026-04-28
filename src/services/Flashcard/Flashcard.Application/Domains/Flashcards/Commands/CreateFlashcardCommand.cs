@@ -1,6 +1,6 @@
 using Flashcard.Application.Common.Exceptions;
-using Flashcard.Application.Common.Mappings;
 using Flashcard.Application.Contracts;
+using Flashcard.Domain.Enums;
 using Flashcard.Domain.Repositories;
 using MediatR;
 
@@ -11,11 +11,11 @@ public record CreateFlashcardCommand(
     Guid DeckId,
     string Front,
     string Back,
-    FsrsCardDto Card) : IRequest<FlashcardDto>;
+    FsrsCardDto Card) : IRequest<Domain.Entities.Flashcard>;
 
-public class CreateFlashcardCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateFlashcardCommand, FlashcardDto>
+public class CreateFlashcardCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateFlashcardCommand, Domain.Entities.Flashcard>
 {
-    public async Task<FlashcardDto> Handle(CreateFlashcardCommand request, CancellationToken cancellationToken)
+    public async Task<Domain.Entities.Flashcard> Handle(CreateFlashcardCommand request, CancellationToken cancellationToken)
     {
         var deck = await unitOfWork.Decks.GetByIdForUserAsync(request.UserId, request.DeckId, cancellationToken);
         if (deck is null)
@@ -24,23 +24,26 @@ public class CreateFlashcardCommandHandler(IUnitOfWork unitOfWork) : IRequestHan
         }
 
         var card = request.Card;
-        var flashcard = Domain.Entities.Flashcard.Create(
-            request.UserId,
-            request.DeckId,
-            request.Front,
-            request.Back,
-            card.Due,
-            card.Stability,
-            card.Difficulty,
-            card.ElapsedDays,
-            card.ScheduledDays,
-            card.Reps,
-            card.Lapses,
-            card.State.ToFsrsState(),
-            card.LastReview);
+        
+        var flashcard = new Domain.Entities.Flashcard
+        {
+            UserId = request.UserId,
+            DeckId = request.DeckId,
+            Front = request.Front,
+            Back = request.Back,
+            Due = card.Due,
+            Stability = card.Stability,
+            Difficulty = card.Difficulty,
+            ElapsedDays = card.ElapsedDays,
+            ScheduledDays = card.ScheduledDays,
+            Reps = card.Reps,
+            Lapses = card.Lapses,
+            State = (FsrsState)card.State,
+            LastReview = card.LastReview,
+        };
 
         await unitOfWork.Flashcards.AddAsync(flashcard, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return flashcard.ToDto();
+        return flashcard;
     }
 }

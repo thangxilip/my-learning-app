@@ -1,16 +1,15 @@
 using Flashcard.Application.Common.Exceptions;
-using Flashcard.Application.Common.Mappings;
-using Flashcard.Application.Contracts;
+using Flashcard.Domain.Entities;
 using Flashcard.Domain.Repositories;
 using MediatR;
 
 namespace Flashcard.Application.Domains.Decks.Queries;
 
-public record GetDeckByIdQuery(Guid UserId, Guid DeckId) : IRequest<DeckDto>;
+public record GetDeckByIdQuery(Guid UserId, Guid DeckId) : IRequest<Deck>;
 
-public class GetDeckByIdQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetDeckByIdQuery, DeckDto>
+public class GetDeckByIdQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetDeckByIdQuery, Deck>
 {
-    public async Task<DeckDto> Handle(GetDeckByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Deck> Handle(GetDeckByIdQuery request, CancellationToken cancellationToken)
     {
         var deck = await unitOfWork.Decks.GetByIdForUserAsync(request.UserId, request.DeckId, cancellationToken);
         if (deck is null)
@@ -18,6 +17,6 @@ public class GetDeckByIdQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<G
             throw new NotFoundException("Deck not found.");
         }
 
-        return deck.ToDto();
+        return deck;
     }
 }

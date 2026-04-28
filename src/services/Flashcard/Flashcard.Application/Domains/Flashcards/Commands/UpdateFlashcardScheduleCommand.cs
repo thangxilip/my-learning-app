@@ -1,5 +1,4 @@
 using Flashcard.Application.Common.Exceptions;
-using Flashcard.Application.Common.Mappings;
 using Flashcard.Application.Contracts;
 using Flashcard.Domain.Repositories;
 using MediatR;
@@ -17,28 +16,29 @@ public class UpdateFlashcardScheduleCommandHandler(IUnitOfWork unitOfWork)
 {
     public async Task<FlashcardDto> Handle(UpdateFlashcardScheduleCommand request, CancellationToken cancellationToken)
     {
-        var flashcard = await unitOfWork.Flashcards.GetByIdForUserAsync(request.UserId, request.FlashcardId, cancellationToken);
-        if (flashcard is null)
-        {
-            throw new NotFoundException("Flashcard not found.");
-        }
-
-        ValidateRowVersion(request.ExpectedRowVersion, flashcard.RowVersion);
-
-        var card = request.Card;
-        flashcard.UpdateSchedule(
-            card.Due,
-            card.Stability,
-            card.Difficulty,
-            card.ElapsedDays,
-            card.ScheduledDays,
-            card.Reps,
-            card.Lapses,
-            card.State.ToFsrsState(),
-            card.LastReview);
-
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-        return flashcard.ToDto();
+        // var flashcard = await unitOfWork.Flashcards.GetByIdForUserAsync(request.UserId, request.FlashcardId, cancellationToken);
+        // if (flashcard is null)
+        // {
+        //     throw new NotFoundException("Flashcard not found.");
+        // }
+        //
+        // ValidateRowVersion(request.ExpectedRowVersion, flashcard.RowVersion);
+        //
+        // var card = request.Card;
+        // flashcard.UpdateSchedule(
+        //     card.Due,
+        //     card.Stability,
+        //     card.Difficulty,
+        //     card.ElapsedDays,
+        //     card.ScheduledDays,
+        //     card.Reps,
+        //     card.Lapses,
+        //     card.State.ToFsrsState(),
+        //     card.LastReview);
+        //
+        // await unitOfWork.SaveChangesAsync(cancellationToken);
+        // return flashcard.ToDto();
+        throw new NotImplementedException();
     }
 
     private static void ValidateRowVersion(string? expectedRowVersion, byte[] actualRowVersion)

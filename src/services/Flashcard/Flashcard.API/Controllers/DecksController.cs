@@ -2,12 +2,13 @@ using Flashcard.API.Contracts;
 using Flashcard.Application.Contracts;
 using Flashcard.Application.Domains.Decks.Commands;
 using Flashcard.Application.Domains.Decks.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Flashcard.API.Controllers;
 
 [Route("api/v1/decks")]
-public class DecksController(MediatR.IMediator mediator) : BaseApiController(mediator)
+public class DecksController(IMediator mediator) : BaseApiController(mediator)
 {
     [HttpGet]
     [ProducesResponseType(typeof(List<DeckDto>), StatusCodes.Status200OK)]

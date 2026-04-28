@@ -1,17 +1,15 @@
 using Flashcard.Application.Common.Exceptions;
-using Flashcard.Application.Common.Mappings;
-using Flashcard.Application.Contracts;
 using Flashcard.Domain.Repositories;
 using MediatR;
 
 namespace Flashcard.Application.Domains.Flashcards.Queries;
 
-public record ListDueFlashcardsQuery(Guid UserId, Guid DeckId, DateTime Before) : IRequest<List<FlashcardDto>>;
+public record ListDueFlashcardsQuery(Guid UserId, Guid DeckId, DateTime Before) : IRequest<List<Domain.Entities.Flashcard>>;
 
 public class ListDueFlashcardsQueryHandler(IUnitOfWork unitOfWork)
-    : IRequestHandler<ListDueFlashcardsQuery, List<FlashcardDto>>
+    : IRequestHandler<ListDueFlashcardsQuery, List<Domain.Entities.Flashcard>>
 {
-    public async Task<List<FlashcardDto>> Handle(ListDueFlashcardsQuery request, CancellationToken cancellationToken)
+    public async Task<List<Domain.Entities.Flashcard>> Handle(ListDueFlashcardsQuery request, CancellationToken cancellationToken)
     {
         var deckExists = await unitOfWork.Decks.ExistsAsync(
             x => x.Id == request.DeckId && x.UserId == request.UserId,
@@ -28,6 +26,6 @@ public class ListDueFlashcardsQueryHandler(IUnitOfWork unitOfWork)
             request.Before,
             cancellationToken);
 
-        return flashcards.Select(x => x.ToDto()).ToList();
+        return flashcards.ToList();
     }
 }

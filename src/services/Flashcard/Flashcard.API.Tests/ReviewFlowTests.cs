@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Flashcard.API.Tests.TestSupport;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Xunit;
 
 namespace Flashcard.API.Tests;
 

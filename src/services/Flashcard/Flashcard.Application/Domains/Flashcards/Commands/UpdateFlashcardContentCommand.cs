@@ -1,5 +1,3 @@
-using Flashcard.Application.Common.Exceptions;
-using Flashcard.Application.Common.Mappings;
 using Flashcard.Application.Contracts;
 using Flashcard.Domain.Repositories;
 using MediatR;
@@ -13,14 +11,15 @@ public class UpdateFlashcardContentCommandHandler(IUnitOfWork unitOfWork)
 {
     public async Task<FlashcardDto> Handle(UpdateFlashcardContentCommand request, CancellationToken cancellationToken)
     {
-        var flashcard = await unitOfWork.Flashcards.GetByIdForUserAsync(request.UserId, request.FlashcardId, cancellationToken);
-        if (flashcard is null)
-        {
-            throw new NotFoundException("Flashcard not found.");
-        }
-
-        flashcard.UpdateContent(request.Front, request.Back);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-        return flashcard.ToDto();
+        // var flashcard = await unitOfWork.Flashcards.GetByIdForUserAsync(request.UserId, request.FlashcardId, cancellationToken);
+        // if (flashcard is null)
+        // {
+        //     throw new NotFoundException("Flashcard not found.");
+        // }
+        //
+        // flashcard.UpdateContent(request.Front, request.Back);
+        // await unitOfWork.SaveChangesAsync(cancellationToken);
+        // return flashcard.ToDto();
+        throw new NotImplementedException();
     }
 }
