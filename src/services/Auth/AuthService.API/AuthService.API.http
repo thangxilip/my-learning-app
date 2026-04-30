@@ -1,6 +1,14 @@
 @AuthService.API_HostAddress = http://localhost:5046
 
-GET {{AuthService.API_HostAddress}}/weatherforecast/
+POST {{AuthService.API_HostAddress}}/api/v1/users
+Content-Type: application/json
 Accept: application/json
+
+{
+  "email": "demo@example.com",
+  "password": "Password123",
+  "firstName": "Demo",
+  "lastName": "User"
+}
 
 ###
