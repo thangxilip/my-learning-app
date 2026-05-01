@@ -14,16 +14,17 @@ public static class YarpExtensions
             {
                 builder.AddRequestTransform(ctx =>
                 {
-                    ctx.ProxyRequest.Headers.Remove("Authorization");
-
                     var user = ctx.HttpContext.User;
                     if (user?.Identity?.IsAuthenticated != true)
                     {
+                        // Leave Authorization on the proxied request so Flashcard can validate the bearer
+                        // when the gateway principal was not populated (misconfiguration, handler edge cases).
                         return ValueTask.CompletedTask;
                     }
 
                     var sub = user.FindFirst(JwtRegisteredClaimNames.Sub)?.Value
-                              ?? user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                              ?? user.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                              ?? user.FindFirst("user_id")?.Value;
                     if (!string.IsNullOrEmpty(sub))
                     {
                         ctx.ProxyRequest.Headers.TryAddWithoutValidation("X-User-Id", sub);
@@ -34,6 +35,12 @@ public static class YarpExtensions
                     if (!string.IsNullOrEmpty(email))
                     {
                         ctx.ProxyRequest.Headers.TryAddWithoutValidation("X-User-Email", email);
+                    }
+
+                    // Internal hop: prefer trusted headers; drop bearer so Flashcard uses gateway header scheme.
+                    if (!string.IsNullOrEmpty(sub))
+                    {
+                        ctx.ProxyRequest.Headers.Remove("Authorization");
                     }
 
                     return ValueTask.CompletedTask;

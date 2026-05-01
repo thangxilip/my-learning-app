@@ -1,9 +1,8 @@
-using Flashcard.API.Auth;
+using Flashcard.API.Extensions;
 using Flashcard.API.Middleware;
 using Flashcard.Application;
 using Flashcard.Infrastructure;
 using Flashcard.Infrastructure.Data;
-using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,16 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddFlashcardApplication();
 builder.Services.AddFlashcardInfrastructure(builder.Configuration);
 
-// Identity comes from X-User-Id / X-User-Email headers injected by the API gateway after JWT validation.
-// Do not expose this service directly to clients without network isolation (only the gateway should reach it).
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = GatewayHeaderAuthenticationDefaults.SchemeName;
-        options.DefaultChallengeScheme = GatewayHeaderAuthenticationDefaults.SchemeName;
-    })
-    .AddScheme<AuthenticationSchemeOptions, GatewayHeaderAuthenticationHandler>(
-        GatewayHeaderAuthenticationDefaults.SchemeName,
-        _ => { });
+// With Jwt:* configured: Bearer is validated locally; otherwise only X-User-Id (gateway) is trusted.
+builder.Services.AddFlashcardAuthentication(builder.Configuration);
 
 builder.Services.AddAuthorization();
 

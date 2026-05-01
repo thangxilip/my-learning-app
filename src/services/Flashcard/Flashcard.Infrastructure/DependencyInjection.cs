@@ -1,10 +1,14 @@
+using AuthService.Domain.Configurations;
 using Flashcard.Domain.Repositories;
+using Flashcard.Domain.Repositories.Base;
 using Flashcard.Infrastructure.Data;
 using Flashcard.Infrastructure.Repositories;
 using Flashcard.Infrastructure.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 
 namespace Flashcard.Infrastructure;
 
@@ -14,10 +18,15 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? "Data Source=flashcard.db";
+        var appConfig = configuration.Get<AppConfig>() ?? throw new NullReferenceException("Invalid configuration");
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(appConfig.ConnectionStrings.DefaultConnection);
+        dataSourceBuilder.EnableDynamicJson();
+        var dataSource = dataSourceBuilder.Build();
 
-        services.AddDbContext<FlashcardDbContext>(options => options.UseSqlite(connectionString));
+        var npgsqlBuilderFunc = new Action<NpgsqlDbContextOptionsBuilder>(
+            builder => builder.MigrationsHistoryTable("__EFMigrationsHistory", "dev"));
+
+        services.AddDbContext<FlashcardDbContext>(options => options.UseNpgsql(dataSource, npgsqlBuilderFunc));
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IDeckRepository, DeckRepository>();
