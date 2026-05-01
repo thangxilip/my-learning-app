@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { FSRS, Rating, State, type Card, type ReviewLog } from '@squeakyrobot/fsrs';
+import { Button } from '@/components/ui/button';
 
 const fsrs = new FSRS();
 
@@ -64,7 +65,7 @@ function review(grade: (typeof Rating)[keyof typeof Rating]) {
         Back
         <input v-model="back" type="text" placeholder="Answer" />
       </label>
-      <button type="button" @click="createCard">Create card</button>
+      <Button @click="createCard">Create card</Button>
     </section>
 
     <section v-if="hasCard" class="panel">
