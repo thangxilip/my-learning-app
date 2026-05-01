@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 
 namespace Flashcard.API.Tests.TestSupport;
 
@@ -10,15 +9,9 @@ public class FlashcardApiFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        // Override appsettings / appsettings.Development PostgreSQL connection for isolated SQLite tests
+        builder.UseSetting("ConnectionStrings:DefaultConnection", $"Data Source={_databasePath}");
         builder.UseEnvironment("Development");
-        builder.ConfigureAppConfiguration((_, configBuilder) =>
-        {
-            configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                ["ConnectionStrings:DefaultConnection"] = $"Data Source={_databasePath}",
-                ["Jwt:Key"] = "integration-tests-signing-key-at-least-32"
-            });
-        });
     }
 
     protected override void Dispose(bool disposing)

@@ -3,6 +3,7 @@ using Flashcard.Application.Contracts;
 using Flashcard.Application.Domains.Decks.Commands;
 using Flashcard.Application.Domains.Decks.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Flashcard.API.Controllers;

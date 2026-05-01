@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Flashcard.Application\Flashcard.Application.csproj" />
       <ProjectReference Include="..\Flashcard.Infrastructure\Flashcard.Infrastructure.csproj" />
     </ItemGroup>

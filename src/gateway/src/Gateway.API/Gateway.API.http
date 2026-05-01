@@ -24,8 +24,8 @@ Content-Type: application/json
 
 ###
 
-### Orders (requires Bearer token; policy Authenticated)
-GET {{Gateway.API_HostAddress}}/orders/
+### Decks (requires Bearer token; policy Authenticated)
+GET {{Gateway.API_HostAddress}}/api/v1/decks
 Authorization: Bearer {{token}}
 
 ###

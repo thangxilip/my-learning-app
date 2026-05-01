@@ -1,9 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
 using Flashcard.API.Tests.TestSupport;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
@@ -27,7 +22,8 @@ public class ReviewFlowTests : IClassFixture<FlashcardApiFactory>
         {
             BaseAddress = new Uri("https://localhost")
         });
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CreateJwt(userId));
+        // Same headers the API gateway would send after JWT validation
+        client.DefaultRequestHeaders.Add("X-User-Id", userId.ToString());
 
         var createDeckResponse = await client.PostAsJsonAsync("/api/v1/decks", new
         {
@@ -95,25 +91,6 @@ public class ReviewFlowTests : IClassFixture<FlashcardApiFactory>
         Assert.NotNull(reviewResult);
         Assert.Equal(1, reviewResult!.Flashcard.Card.Reps);
         Assert.Equal(3, reviewResult.ReviewLog.Rating);
-    }
-
-    private static string CreateJwt(Guid userId)
-    {
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, userId.ToString())
-        };
-
-        var credentials = new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes("integration-tests-signing-key-at-least-32")),
-            SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
-            signingCredentials: credentials);
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
     private sealed record DeckResponse(Guid Id, string Name, string? Description, int SortOrder);
