@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
 import {
   Card,
   CardContent,
@@ -7,11 +10,48 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { ApiException, Client, LoginRequest } from '@/api/auth.generated'
 import LoginForm from '@/features/auth/components/LoginForm.vue'
 import type { LoginFormValues } from '@/features/auth/types'
+import { useAuthStore } from '@/stores/auth'
 
-function handleLogin(values: LoginFormValues) {
-  void values
+const router = useRouter()
+const auth = useAuthStore()
+
+const submitting = ref(false)
+const errorMessage = ref<string | null>(null)
+
+function loginErrorMessage(err: unknown): string {
+  if (ApiException.isApiException(err)) {
+    return err.message
+  }
+  if (err && typeof err === 'object') {
+    const detail = (err as { detail?: string }).detail
+    const title = (err as { title?: string }).title
+    if (typeof detail === 'string' && detail.trim()) return detail
+    if (typeof title === 'string' && title.trim()) return title
+  }
+  if (err instanceof Error) return err.message
+  return 'Could not sign in. Try again.'
+}
+
+async function handleLogin(values: LoginFormValues) {
+  errorMessage.value = null
+  submitting.value = true
+
+  const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') ?? ''
+  const client = new Client(baseUrl)
+
+  try {
+    const body = new LoginRequest({ email: values.email, password: values.password })
+    const response = await client.login(body)
+    auth.setSession(response, values.rememberMe)
+    await router.push({ name: 'home' })
+  } catch (err) {
+    errorMessage.value = loginErrorMessage(err)
+  } finally {
+    submitting.value = false
+  }
 }
 </script>
 
@@ -41,8 +81,15 @@ function handleLogin(values: LoginFormValues) {
             </CardDescription>
           </CardHeader>
 
-          <CardContent>
-            <LoginForm @submit="handleLogin" />
+          <CardContent class="space-y-4">
+            <p
+              v-if="errorMessage"
+              class="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+              role="alert"
+            >
+              {{ errorMessage }}
+            </p>
+            <LoginForm :submitting="submitting" @submit="handleLogin" />
           </CardContent>
 
           <CardFooter class="justify-center">

@@ -12,7 +12,9 @@
     "lint": "run-s lint:*",
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "api:generate": "run-s api:generate:*",
+    "api:generate:auth": "nswag run nswag/auth.nswag.json"
   },
   "dependencies": {
     "@squeakyrobot/fsrs": "^1.0.0",
@@ -41,6 +43,7 @@
     "eslint-plugin-vue": "~10.8.0",
     "jiti": "^2.6.1",
     "npm-run-all2": "^8.0.4",
+    "nswag": "^14.7.1",
     "oxlint": "~1.60.0",
     "prettier": "3.8.3",
     "tailwindcss": "^4.2.4",

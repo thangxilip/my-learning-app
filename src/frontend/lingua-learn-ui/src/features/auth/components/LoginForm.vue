@@ -8,6 +8,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import type { LoginFormValues } from '@/features/auth/types'
 
+const props = withDefaults(
+  defineProps<{
+    submitting?: boolean
+  }>(),
+  { submitting: false },
+)
+
 const emit = defineEmits<{
   submit: [values: LoginFormValues]
 }>()
@@ -19,23 +26,17 @@ const form = reactive<LoginFormValues>({
 })
 
 const showPassword = ref(false)
-const isSubmitting = ref(false)
 
 const canSubmit = computed(() => form.email.trim().length > 0 && form.password.length > 0)
 
 function handleSubmit() {
-  if (!canSubmit.value || isSubmitting.value) return
+  if (!canSubmit.value || props.submitting) return
 
-  isSubmitting.value = true
-
-  window.setTimeout(() => {
-    emit('submit', {
-      email: form.email.trim(),
-      password: form.password,
-      rememberMe: form.rememberMe,
-    })
-    isSubmitting.value = false
-  }, 450)
+  emit('submit', {
+    email: form.email.trim(),
+    password: form.password,
+    rememberMe: form.rememberMe,
+  })
 }
 </script>
 
@@ -97,9 +98,9 @@ function handleSubmit() {
       </div>
     </div>
 
-    <Button class="h-10 w-full" :disabled="!canSubmit || isSubmitting" type="submit">
-      <LoaderCircle v-if="isSubmitting" class="size-4 animate-spin" />
-      <span>{{ isSubmitting ? 'Signing in' : 'Sign in' }}</span>
+    <Button class="h-10 w-full" :disabled="!canSubmit || submitting" type="submit">
+      <LoaderCircle v-if="submitting" class="size-4 animate-spin" />
+      <span>{{ submitting ? 'Signing in' : 'Sign in' }}</span>
     </Button>
   </form>
 </template>
