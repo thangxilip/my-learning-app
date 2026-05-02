@@ -12,7 +12,8 @@ builder.Services.AddFlashcardInfrastructure(builder.Configuration);
 
 // With Jwt:* configured: Bearer is validated locally; otherwise only X-User-Id (gateway) is trusted.
 builder.Services.AddFlashcardAuthentication(builder.Configuration);
-
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -22,6 +23,8 @@ if (app.Environment.IsDevelopment())
     // await using var scope = app.Services.CreateAsyncScope();
     // var db = scope.ServiceProvider.GetRequiredService<FlashcardDbContext>();
     // await db.Database.EnsureCreatedAsync();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

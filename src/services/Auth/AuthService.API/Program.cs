@@ -17,7 +17,6 @@ builder.Services.AddOptions<JwtOptions>()
         "Jwt: SigningKey must be at least 32 characters; Issuer and Audience are required.")
     .ValidateOnStart();
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
-builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -25,7 +24,6 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
