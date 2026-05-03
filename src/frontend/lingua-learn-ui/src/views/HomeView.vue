@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { Button } from '@/components/ui/button'
+import MainWorkspace from '@/features/dashboard/components/MainWorkspace.vue'
 import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -17,18 +18,27 @@ function signOut() {
 </script>
 
 <template>
-  <main class="min-h-screen bg-background px-6 py-12 text-foreground">
-    <div class="mx-auto flex max-w-lg flex-col gap-6">
-      <div class="space-y-2">
-        <p class="text-sm font-medium text-muted-foreground">Lingua Learn</p>
-        <h1 class="text-3xl font-semibold tracking-tight">{{ greeting }}</h1>
-        <p class="text-muted-foreground">
-          You are signed in. Your dashboard will live here.
-        </p>
+  <div class="min-h-screen bg-zinc-50 text-foreground dark:bg-background">
+    <header
+      class="border-b border-border/80 bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60"
+    >
+      <div
+        class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6"
+      >
+        <div class="min-w-0 space-y-0.5">
+          <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Lingua Learn
+          </p>
+          <p class="truncate text-sm font-medium">{{ greeting }}</p>
+        </div>
+        <Button variant="outline" size="sm" type="button" @click="signOut">
+          Sign out
+        </Button>
       </div>
-      <div>
-        <Button variant="outline" type="button" @click="signOut">Sign out</Button>
-      </div>
-    </div>
-  </main>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+      <MainWorkspace />
+    </main>
+  </div>
 </template>
