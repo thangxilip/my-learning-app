@@ -1,0 +1,108 @@
+name: Build and Deploy Backend Microservices
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'src/services/**'
+      - 'src/gateway/**'
+      - 'src/Shared/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_BASE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    
+    strategy:
+      matrix:
+        service: 
+          - { name: 'gateway', path: 'src/gateway/src/Gateway.API/Dockerfile' }
+          - { name: 'auth-service', path: 'src/services/Auth/AuthService.API/Dockerfile' }
+          - { name: 'flashcard-service', path: 'src/services/Flashcard/Flashcard.API/Dockerfile' }
+          - { name: 'todo-service', path: 'src/services/Todo/Todo.API/Dockerfile' }
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE_NAME }}/${{ matrix.service.name }}
+          tags: |
+            type=sha,format=long
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ${{ matrix.service.path }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  deploy-to-azure:
+    needs: build-and-push-images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Note: Ensure these Azure Container App names match the ones you provision in Azure Portal.
+      - name: Deploy Gateway
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          containerAppName: my-learning-gateway
+          resourceGroup: my-learning-app-rg
+          imageToDeploy: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE_NAME }}/gateway:sha-${{ github.sha }}
+          registryUrl: ${{ env.REGISTRY }}
+          registryUsername: ${{ github.actor }}
+          registryPassword: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Deploy Auth Service
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          containerAppName: my-learning-auth
+          resourceGroup: my-learning-app-rg
+          imageToDeploy: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE_NAME }}/auth-service:sha-${{ github.sha }}
+          registryUrl: ${{ env.REGISTRY }}
+          registryUsername: ${{ github.actor }}
+          registryPassword: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy Flashcard Service
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          containerAppName: my-learning-flashcard
+          resourceGroup: my-learning-app-rg
+          imageToDeploy: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE_NAME }}/flashcard-service:sha-${{ github.sha }}
+          registryUrl: ${{ env.REGISTRY }}
+          registryUsername: ${{ github.actor }}
+          registryPassword: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy Todo Service
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          containerAppName: my-learning-todo
+          resourceGroup: my-learning-app-rg
+          imageToDeploy: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE_NAME }}/todo-service:sha-${{ github.sha }}
+          registryUrl: ${{ env.REGISTRY }}
+          registryUsername: ${{ github.actor }}
+          registryPassword: ${{ secrets.GITHUB_TOKEN }}
